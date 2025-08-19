@@ -5,7 +5,7 @@ public class ChatHub : Hub
     public async Task JoinChat(UserConnection conn)
     {
         await Clients.All
-            .SendAsync("Recieved Message", "admin", $"{conn.Username} has joined");
+            .SendAsync("ReceiveMessage", "admin", $"{conn.Username} has joined");
     }
 
     public async Task JoinSpecificChat(UserConnection conn)
@@ -16,7 +16,7 @@ public class ChatHub : Hub
         await Clients
             .Group(conn.ChatRoom)
             .SendAsync(
-                "RecievedMessage",
+                "ReceiveMessage",
                 "admin",
                 $"{conn.Username} has joined {conn.ChatRoom}");
     }
