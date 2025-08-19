@@ -1,0 +1,6 @@
+@Chatik_HostAddress = http://localhost:5037
+
+GET {{Chatik_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
