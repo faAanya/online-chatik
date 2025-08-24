@@ -1,10 +1,13 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-
+var connectionString = "Host=localhost;Port=5432;Database=chat;Username=postgres;Password=p2006olina";
+builder.Services.AddDbContext<ChatDBContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("reactChatik", builder =>
@@ -15,6 +18,7 @@ builder.Services.AddCors(opt =>
         .AllowCredentials();
     });
 });
+builder.Services.AddSingleton<SharedDB>();
 
 var app = builder.Build();
 

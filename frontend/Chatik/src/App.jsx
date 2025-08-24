@@ -3,10 +3,12 @@ import { Col, Container, Row } from "react-bootstrap"
 import { WaitingRoom } from "./components/waitingRoom"
 import { useState } from "react"
 import { HubConnectionBuilder, LogLevel } from "@microsoft/signalr"
+import { ChatRoom } from "./components/chatRoom"
 
 function App() {
 
   const [conn, setConnection] = useState();
+  const [messages, setMessages] = useState([]);
 
   const joinChatRoom = async (userName, chatRoom) => {
     try {
@@ -19,6 +21,11 @@ function App() {
         console.log("message: ", message);
 
       });
+
+      conn.on("ReceiveSpecificMessage", (userName, message) => {
+        setMessages(msgs => [...msgs, { userName, message }])
+      });
+
       await conn.start();
       await conn.invoke("JoinSpecificChat", { userName, chatRoom });
       setConnection(conn);
@@ -27,6 +34,13 @@ function App() {
     }
   }
 
+  const sendMessage = async (message) => {
+    try {
+      await conn.invoke("SendMessage", message);
+    } catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <>
       <main>
@@ -36,7 +50,12 @@ function App() {
               <h1> Welcome to Chatik!</h1>
             </Col>
           </Row>
-          <WaitingRoom joinChatRoom={joinChatRoom}></WaitingRoom>
+          {
+            !conn
+              ?
+              <WaitingRoom joinChatRoom={joinChatRoom}></WaitingRoom>
+              : <ChatRoom messages={messages} sendMessage={sendMessage}> </ChatRoom>
+          }
         </Container>
       </main >
     </>
