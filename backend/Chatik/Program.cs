@@ -18,8 +18,6 @@ builder.Services.AddCors(opt =>
         .AllowCredentials();
     });
 });
-builder.Services.AddSingleton<SharedDB>();
-
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
