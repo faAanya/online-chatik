@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignInButton extends StatelessWidget {
-  const SignInButton({
-    super.key,
-    required this.text,
-    required this.onTap,
-  });
+  const SignInButton({super.key, required this.text, required this.onTap});
   final void Function() onTap;
   final String text;
 
@@ -17,14 +13,14 @@ class SignInButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 25),
         margin: EdgeInsets.symmetric(horizontal: 25),
         decoration: BoxDecoration(
-          color: Colors.grey[900],
-          borderRadius: BorderRadius.circular(12),
+          color: Theme.of(context).colorScheme.primary,
+          borderRadius: BorderRadius.circular(24),
         ),
         child: Text(
           text,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: Colors.grey[100],
+            color: Theme.of(context).colorScheme.onPrimary,
             fontWeight: FontWeight.bold,
           ),
         ),

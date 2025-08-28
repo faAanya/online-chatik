@@ -1,18 +1,19 @@
 import 'dart:async';
 
+import 'package:flutter_frontend/model/user.dart';
+
 class AuthService {
-  static bool loggedIn = false;
-  static final StreamController<bool?> _eventStreamController =
+  static User? user;
+  static final StreamController<User?> _eventStreamController =
       StreamController();
-  static Stream<bool?> get onUserChange =>
-      _eventStreamController.stream;
+  static Stream<User?> get onUserChange => _eventStreamController.stream;
   static Future<void> signIn() async {
-    loggedIn = true;
-    _eventStreamController.add(true);
+    user = User(nickname: "Test", phonenumber: "+375291405314");
+    _eventStreamController.add(user);
   }
 
   static Future<void> signOut() async {
-    loggedIn = false;
+    user = null;
     _eventStreamController.add(null);
   }
 }

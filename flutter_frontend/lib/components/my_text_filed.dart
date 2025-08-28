@@ -6,31 +6,46 @@ class MyTextField extends StatelessWidget {
     required this.controller,
     required this.hintText,
     required this.obscure,
+    required this.validator,
   });
   final TextEditingController controller;
   final String hintText;
   final bool obscure;
+  final String? Function(String?) validator;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24.0),
-      child: TextField(
-        controller: controller,
+      child: TextFormField(
+        validator: validator,
         obscureText: obscure,
         decoration: InputDecoration(
-          hint: Text(hintText),
-          hintStyle: TextStyle(color: Colors.grey[500]),
-          fillColor: Colors.grey.shade200,
-          filled: true,
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.grey.shade400),
+          hintText: hintText,
+          border: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(context).colorScheme.outline, // Use theme color
+            ),
           ),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(
+                context,
+              ).colorScheme.onSurfaceVariant, // Use theme color
+            ),
           ),
-          border: OutlineInputBorder(),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Theme.of(
+                context,
+              ).colorScheme.primary, // Use theme primary color
+            ),
+          ),
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.outline,
+          ), // Theme-based hint style
         ),
+        style: Theme.of(context).textTheme.bodyMedium, // Theme-based text style
       ),
     );
   }
