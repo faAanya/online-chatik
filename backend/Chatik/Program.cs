@@ -6,18 +6,8 @@ builder.Services.AddSignalR();
 
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
-var connectionString = "Host=localhost;Port=5432;Database=chat;Username=postgres;Password=p2006olina";
+var connectionString = "Host=postgres;Port=5432;Database=onlineChat;Username=postgres;Password=onlineChat";
 builder.Services.AddDbContext<ChatDBContext>(options => options.UseNpgsql(connectionString));
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy("reactChatik", builder =>
-    {
-        builder.WithOrigins("http://localhost:5173")
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .AllowCredentials();
-    });
-});
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -25,12 +15,10 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();
-
+app.MapGet("/users", async (ChatDBContext db) =>
+    await db.Users.ToListAsync());
 app.MapHub<ChatHub>("/chat");
-app.UseCors("reactChatik");
 app.Run();
