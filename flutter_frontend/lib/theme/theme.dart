@@ -11,7 +11,7 @@ final darkTheme = ThemeData(
   useMaterial3: true,
   brightness: Brightness.dark,
   colorScheme: ColorScheme.fromSeed(
-    seedColor: Colors.blue.shade400,
+    seedColor: Colors.blue.shade500,
     brightness: Brightness.dark,
   ),
 );

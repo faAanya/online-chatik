@@ -3,6 +3,7 @@ import 'package:flutter_frontend/model/chat.dart';
 import 'package:flutter_frontend/model/user.dart';
 import 'package:flutter_frontend/servives/auth_service.dart';
 import 'package:flutter_frontend/servives/chat_service.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'something.dart';
 
@@ -14,9 +15,7 @@ class MyCarousel extends StatefulWidget {
 }
 
 class _MyCarouselState extends State<MyCarousel> {
-  final double avatarRadius = 30;
-
-  final double horizontalPadding = 8.0;
+  final double itemExtent = 80;
 
   @override
   Widget build(BuildContext context) {
@@ -25,11 +24,11 @@ class _MyCarouselState extends State<MyCarousel> {
         return Column(
           children: [
             SizedBox(
-              height: 50,
+              height: 100,
               child: InfiniteCarousel.builder(
                 onIndexChanged: (i) => chatService.changeSelection(i),
                 itemCount: chatService.chats.length,
-                itemExtent: 80,
+                itemExtent: itemExtent,
                 center: true,
                 itemBuilder: (context, index, realIndex) {
                   Chat chat = chatService.chats[index];
@@ -37,43 +36,72 @@ class _MyCarouselState extends State<MyCarousel> {
                     (u) => u.id != AuthService.user!.id,
                   );
 
-                  if (u.avatarUrl != null) {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(),
-                      child: CircleAvatar(
-                        radius: avatarRadius,
-                        backgroundImage: AssetImage(u.avatarUrl!),
-                        child: Text(
-                          index.toString(),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    );
-                  } else {
-                    return Padding(
-                      padding: EdgeInsets.symmetric(),
-                      child: CircleAvatar(
-                        radius: avatarRadius,
-                        backgroundColor: Theme.of(
-                          context,
-                        ).colorScheme.secondary,
-                        child: Text(
-                          index.toString(),
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    );
-                  }
+                  return UserAvatar(
+                    avatarUrl: u.avatarUrl,
+                    text: index.toString(),
+                    itemExtent: itemExtent,
+                    selected: index == chatService.selectedIndex,
+                  );
                 },
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Icon(Icons.arrow_drop_up_outlined, size: 60)],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    "lib/assets/images/selector.svg",
+                    height: 30,
+                    colorFilter: ColorFilter.mode(
+                      Theme.of(context).colorScheme.primary,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         );
       },
+    );
+  }
+}
+
+class UserAvatar extends StatelessWidget {
+  const UserAvatar({
+    super.key,
+    required this.avatarUrl,
+    required this.text,
+    required this.itemExtent,
+    required this.selected,
+  });
+
+  final String? avatarUrl;
+  final double itemExtent;
+  final String text;
+  final bool selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 6),
+      padding: EdgeInsets.all(2),
+      width: itemExtent,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          strokeAlign: BorderSide.strokeAlignOutside,
+          style: BorderStyle.solid,
+          color: Theme.of(context).colorScheme.primary,
+          width: selected ? 4 : 1,
+        ),
+      ),
+      child: CircleAvatar(
+        backgroundImage: avatarUrl != null ? AssetImage(avatarUrl!) : null,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        child: Text(text, style: TextStyle(color: Colors.white)),
+      ),
     );
   }
 }
