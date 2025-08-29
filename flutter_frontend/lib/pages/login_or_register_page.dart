@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_text_filed.dart';
 import 'package:flutter_frontend/lang/strings.dart';
@@ -72,7 +74,6 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
       "Phonenumber is incomplete";
     }
     return null;
-    return "The input is $digitsOnly with length ${digitsOnly.length}";
   }
 
   final MaskTextInputFormatter phoneFormatter = MaskTextInputFormatter(
@@ -81,13 +82,13 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
   );
 
   String? _nameValidator(String? value) {
-    final RegExp _specialCharRegex = RegExp(r'[^a-zA-Z0-9_]');
+    final RegExp specialCharRegex = RegExp(r'[^a-zA-Z0-9_]');
 
     if (value == null || value.isEmpty) {
       return 'Please enter your name';
     }
 
-    if (_specialCharRegex.hasMatch(value)) {
+    if (specialCharRegex.hasMatch(value)) {
       return "Name cannot contain special characters";
     }
 

@@ -8,7 +8,7 @@ class AuthService {
       StreamController();
   static Stream<User?> get onUserChange => _eventStreamController.stream;
   static Future<void> signIn() async {
-    user = User(nickname: "Test", phonenumber: "+375291405314");
+    user = User(id: "0", nickname: "Test", phonenumber: "+375291405314");
     _eventStreamController.add(user);
   }
 

@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_frontend/model/chat.dart';
+import 'package:flutter_frontend/model/message.dart';
+import 'package:flutter_frontend/model/user.dart';
+import 'package:flutter_frontend/servives/auth_service.dart';
+import 'package:provider/provider.dart';
 
 class ChatView extends StatefulWidget {
-  const ChatView({super.key});
+  const ChatView({super.key, required this.chat});
+
+  final Chat chat;
 
   @override
   State<ChatView> createState() => _ChatViewState();
@@ -9,53 +16,60 @@ class ChatView extends StatefulWidget {
 
 class _ChatViewState extends State<ChatView> {
   final TextEditingController _controller = TextEditingController();
-  final List<Message> messages = [
-    Message(content: "Miv", mine: false),
-    Message(content: "Moew", mine: true),
-  ];
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            color: Colors.amber,
-            child: ListView.builder(
-              itemCount: messages.length,
-              itemBuilder: (context, index) {
-                return MessageTile(
-                  content: messages[index].content,
-                  isMine: messages[index].mine,
-                );
-              },
-            ),
-          ),
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Expanded(child: TextField(controller: _controller)),
-            IconButton(
-              onPressed: () {
-                setState(() {
-                  messages.add(Message(content: _controller.text, mine: true));
-                  _controller.clear();
-                });
-              },
-              icon: Icon(Icons.send),
-            ),
-          ],
-        ),
-      ],
+    return ChangeNotifierProvider<Chat>.value(
+      value: widget.chat,
+      builder: (context, child) {
+        User me = AuthService.user!;
+
+        return Consumer<Chat>(
+          builder: (context, chat, child) {
+            return Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.amber,
+                    child: ListView.builder(
+                      itemCount: chat.messages.length,
+                      itemBuilder: (context, index) {
+                        return MessageTile(
+                          content: chat.messages[index].content,
+                          isMine: chat.messages[index].senderId == me.id,
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Expanded(child: TextField(controller: _controller)),
+                    IconButton(
+                      onPressed: () {
+                        setState(() {
+                          chat.addMessage(
+                            TextMessage(
+                              content: _controller.text,
+                              senderId: me.id,
+                              createdAt: DateTime.now(),
+                            ),
+                          );
+                          _controller.clear();
+                        });
+                      },
+                      icon: Icon(Icons.send),
+                    ),
+                  ],
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
-}
-
-class Message {
-  Message({required this.content, required this.mine});
-  String content;
-  bool mine;
 }
 
 class MessageTile extends StatelessWidget {
