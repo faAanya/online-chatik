@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/my_text_filed.dart';
 import 'package:flutter_frontend/lang/strings.dart';
 import 'package:flutter_frontend/servives/auth_service.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+const int _phoneNumberLength = 12;
+const int _minNameLength = 4;
 
 class LoginOrRegisterPage extends StatefulWidget {
   const LoginOrRegisterPage({super.key});
@@ -58,16 +62,37 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
     Navigator.pop(context);
   }
 
-  // TODO: Fix Validation
   String? _phoneNumberValidator(String? value) {
     if (value == null || value.isEmpty) {
       return 'Please enter your phone number';
     }
-    // Remove all non-digit characters except potential leading '+'
-    String digitsOnly = value.replaceAll(RegExp(r'[^\d+]'), '');
 
-    if (!RegExp(r'/^\+?[1-9][0-9]{7,14}$/').hasMatch(value)) {
-      return "Invalid phonenumber format";
+    String digitsOnly = value.replaceAll(RegExp(r'[()\s+]'), "");
+    if (digitsOnly.length != _phoneNumberLength) {
+      "Phonenumber is incomplete";
+    }
+    return null;
+    return "The input is $digitsOnly with length ${digitsOnly.length}";
+  }
+
+  final MaskTextInputFormatter phoneFormatter = MaskTextInputFormatter(
+    mask: "+### (##) ### ####",
+    filter: {"#": RegExp(r"[0-9]")},
+  );
+
+  String? _nameValidator(String? value) {
+    final RegExp _specialCharRegex = RegExp(r'[^a-zA-Z0-9_]');
+
+    if (value == null || value.isEmpty) {
+      return 'Please enter your name';
+    }
+
+    if (_specialCharRegex.hasMatch(value)) {
+      return "Name cannot contain special characters";
+    }
+
+    if (value.replaceAll(" ", "").length < 4) {
+      "Name must contain at least $_minNameLength characters";
     }
     return null;
   }
@@ -157,7 +182,7 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
     return Form(
       key: _loginFormKey,
       child: SizedBox(
-        height: 360,
+        height: 380,
         child: Column(
           children: [
             MyTextField(
@@ -165,6 +190,7 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
               hintText: "Phonenumber",
               obscure: false,
               validator: _phoneNumberValidator,
+              formatter: phoneFormatter,
             ),
 
             SizedBox(height: 25),
@@ -186,14 +212,14 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
     return Form(
       key: _registrationFormKey,
       child: SizedBox(
-        height: 360,
+        height: 380,
         child: Column(
           children: [
             MyTextField(
               controller: registrationLoginController,
               hintText: "Name",
               obscure: false,
-              validator: (_) => null,
+              validator: _nameValidator,
             ),
 
             SizedBox(height: 25),
@@ -202,6 +228,7 @@ class _LoginOrRegisterPageState extends State<LoginOrRegisterPage> {
               hintText: "Phonenumber",
               obscure: false,
               validator: _phoneNumberValidator,
+              formatter: phoneFormatter,
             ),
 
             SizedBox(height: 25),
