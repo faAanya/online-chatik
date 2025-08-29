@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/components/chat_view.dart';
 import 'package:flutter_frontend/components/my_carousel.dart';
+import 'package:flutter_frontend/lang/strings.dart';
 import 'package:flutter_frontend/servives/chat_service.dart';
 import 'package:provider/provider.dart';
 
@@ -18,17 +19,27 @@ class _HomePageState extends State<HomePage> {
       builder: (context, chatService, child) {
         if (chatService.chats.isNotEmpty) {
           return Scaffold(
-            appBar: AppBar(title: Text("Polina Chat")),
-            body: Center(
-              child: Padding(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    Expanded(child: ChatView(chat: chatService.selectedChat)),
-                    SizedBox(height: 10),
-                    MyCarousel(),
-                  ],
+            appBar: AppBar(
+              title: Text(
+                appName,
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
+              ),
+              backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+            ),
+            body: Center(
+              child: Column(
+                children: [
+                  Expanded(child: ChatView(chat: chatService.selectedChat)),
+                  SizedBox(height: 10),
+                  Divider(
+                    height: 3,
+                    thickness: 3,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  MyCarousel(),
+                ],
               ),
             ),
           );
