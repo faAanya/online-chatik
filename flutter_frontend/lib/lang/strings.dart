@@ -1,1 +1,1 @@
-const String appName = "Chatik";
+const String appName = "aRound";

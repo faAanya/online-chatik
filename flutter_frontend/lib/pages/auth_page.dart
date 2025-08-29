@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_frontend/model/user.dart';
-import 'package:flutter_frontend/pages/home_page.dart';
 import 'package:flutter_frontend/pages/login_or_register_page.dart';
+import 'package:flutter_frontend/pages/main_page.dart';
 import 'package:flutter_frontend/servives/auth_service.dart';
 
 class AuthPage extends StatelessWidget {
@@ -14,7 +14,7 @@ class AuthPage extends StatelessWidget {
         stream: AuthService.onUserChange,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HomePage();
+            return MainPage();
           } else {
             return LoginOrRegisterPage();
           }
