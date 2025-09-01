@@ -23,7 +23,10 @@ class _MyCarouselState extends State<MyCarousel> {
       builder: (context, chatService, child) {
         return Column(
           children: [
-            SizedBox(
+            Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surface,
+              ),
               height: 100,
               child: InfiniteCarousel.builder(
                 onIndexChanged: (i) => chatService.changeSelection(i),
