@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   Expanded(child: ChatView(chat: chatService.selectedChat)),
-                  SizedBox(height: 10),
                   Divider(
                     height: 3,
                     thickness: 3,
