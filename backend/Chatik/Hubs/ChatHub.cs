@@ -1,10 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 
+[Authorize]
 public class ChatHub : Hub
 {
-    private ChatDBContext _dbContext;
-    public ChatHub(ChatDBContext dbContext)
+    private MessangerDBContext _dbContext;
+    public ChatHub(MessangerDBContext dbContext)
     {
         _dbContext = dbContext;
     }
