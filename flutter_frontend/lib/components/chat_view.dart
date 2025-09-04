@@ -18,6 +18,7 @@ class _ChatViewState extends State<ChatView> {
   final TextEditingController _controller = TextEditingController();
 
   void sendMessage(Chat chat, User me) {
+    if (_controller.text.isEmpty) return;
     setState(() {
       chat.addMessage(
         TextMessage(
