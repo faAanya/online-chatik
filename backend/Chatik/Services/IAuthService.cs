@@ -1,6 +1,5 @@
 public interface IAuthService
 {
-    Task<User>? RegisterAsync(UserDTO request, CancellationToken token);
-    Task<string>? LoginAsync(UserDTO request,CancellationToken token);
-
+    Task<User>? RegisterAsync(RegisterDTO request, CancellationToken token);
+    Task<string>? LoginAsync(LoginDTO request, CancellationToken token);
 }

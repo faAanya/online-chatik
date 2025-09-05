@@ -16,23 +16,32 @@ public class AuthenticationController(IAuthService authService) : ControllerBase
     public static User user = new();
 
     [HttpPost("register")]
-    public async Task<ActionResult<User>> Register(UserDTO request, CancellationToken token)
+    public async Task<ActionResult<User>> Register(RegisterDTO request, CancellationToken token)
     {
-        var user = await authService.RegisterAsync(request, token);
+        user = await authService.RegisterAsync(request, token);
         if (user is null)
-            return BadRequest("Phonenumber is already registered");
+            return BadRequest("Phone number is already registered");
 
         return Ok(user);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<string>> Login(UserDTO request, CancellationToken token)
+    public async Task<ActionResult<string>> Login(LoginDTO request, CancellationToken token)
     {
         var jwtoken = await authService.LoginAsync(request, token);
 
         if (jwtoken is null)
             return BadRequest("Invalid phone number");
 
-        return Ok(jwtoken);
+        var logedUser = new
+        {
+            user.Id,
+            user.UserName,
+            user.PhoneNumber,
+            user.Biography,
+            user.AvatarUrl
+        };
+
+        return Ok(new { jwtoken, logedUser });
     }
 }

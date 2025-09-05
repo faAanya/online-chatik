@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 public class AuthService(MessangerDBContext context, IConfiguration configuration) : IAuthService
 {
-    public async Task<User>? RegisterAsync(UserDTO request, CancellationToken token)
+    public async Task<User>? RegisterAsync(RegisterDTO request, CancellationToken token)
     {
         var hasUser = await context.Users.AsNoTracking().AnyAsync(u => u.PhoneNumber == request.PhoneNumber, token);
         if (hasUser)
@@ -27,9 +27,8 @@ public class AuthService(MessangerDBContext context, IConfiguration configuratio
         await context.SaveChangesAsync(token);
         return user;
     }
-    public async Task<string>? LoginAsync(UserDTO request, CancellationToken token)
+    public async Task<string>? LoginAsync(LoginDTO request, CancellationToken token)
     {
-
         var user = await context.Users.AsNoTracking().FirstOrDefaultAsync(u => u.PhoneNumber == request.PhoneNumber);
 
         if (user is null)
